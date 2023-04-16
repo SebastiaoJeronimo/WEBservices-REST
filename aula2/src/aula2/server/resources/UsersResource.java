@@ -1,5 +1,6 @@
 package aula2.server.resources;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,9 +82,8 @@ public class UsersResource implements RestUsers {
 	@Override
 	public User updateUser(String userId, String password, User user) {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; user = " + user);
-		
-		// TODO Complete method
-		//throw new WebApplicationException(Status.NOT_IMPLEMENTED);
+	
+		//throw new WebApplicationException(Status.NOT_IMPLEMENTED); save this to use when the method is not yet implemented
 
 		if (userId == null || password == null || checkIfUserNotViable(user)){
 			Log.info("UserId or password null or updated User is null or has null parameters.");
@@ -99,11 +99,12 @@ public class UsersResource implements RestUsers {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 		//the password given was not the specified user password
-		if (!password.equals(userServer.getPassword())){ 	//Compare strings with equals~
+		if (!password.equals(userServer.getPassword())){ 	//Compare strings with equals
 			Log.info("Wrong User password."); 
 			throw new WebApplicationException(Status.FORBIDDEN);
 		}
 
+		//put in hashMap returns the previous value that is going to be replaced
 		return users.put(userId, user);
 	}
 
@@ -111,16 +112,46 @@ public class UsersResource implements RestUsers {
 	@Override
 	public User deleteUser(String userId, String password) {
 		Log.info("deleteUser : user = " + userId + "; pwd = " + password);
-		// TODO Complete method
-		throw new WebApplicationException( Status.NOT_IMPLEMENTED );
+		//throw new WebApplicationException( Status.NOT_IMPLEMENTED );
+
+		// Check if user is valid
+		if(userId == null || password == null) {
+			Log.info("UserId or password null.");
+			throw new WebApplicationException( Status.BAD_REQUEST );
+		}
+
+		var user = users.get(userId);
+		
+		// Check if user exists 
+		if( user == null ) {
+			Log.info("User does not exist.");
+			throw new WebApplicationException( Status.NOT_FOUND );
+		}
+
+		//the password given was not the specified user password
+		if (!password.equals(user.getPassword())){ 	//Compare strings with equals
+			Log.info("Wrong User password."); 
+			throw new WebApplicationException(Status.FORBIDDEN);
+		}
+
+		return users.remove(userId);
 	}
 
 
 	@Override
 	public List<User> searchUsers(String pattern) {
 		Log.info("searchUsers : pattern = " + pattern);
-		// TODO Complete method
-		throw new WebApplicationException( Status.NOT_IMPLEMENTED );
+		//throw new WebApplicationException( Status.NOT_IMPLEMENTED );
+		if (pattern == null){
+			Log.info("pattern is null.");
+			throw new WebApplicationException( Status.BAD_REQUEST );
+		}
+		//users that satisfy the pattern given as an argument
+		List<User> patternUsers = new ArrayList<User>();
+		String patternLowCase = pattern.toLowerCase();
+		for( User user : users.values())
+			if (user.getFullName().toLowerCase())
+		return patternUsers;
 	}
 
 }
