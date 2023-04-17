@@ -148,9 +148,12 @@ public class UsersResource implements RestUsers {
 		}
 		//users that satisfy the pattern given as an argument
 		List<User> patternUsers = new ArrayList<User>();
+		//put the pattern in lowercase because its case insensitive
 		String patternLowCase = pattern.toLowerCase();
 		for( User user : users.values())
-			if (user.getFullName().toLowerCase())
+			if (user.getFullName().toLowerCase().contains(patternLowCase))
+				patternUsers.add(user);
+		//maybe put a log here indicating how much users were found ...
 		return patternUsers;
 	}
 
